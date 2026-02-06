@@ -41,7 +41,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
 
 ## 2. Authentication & Security (Azure EntraID)
 
-- [ ] **Implement Authentication with NextAuth.js**
+- [x] **Implement Authentication with NextAuth.js**
     - **Goal:** Secure the application.
     - **Requirements:**
         - Install `next-auth@beta` (for App Router support).
