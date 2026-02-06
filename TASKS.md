@@ -20,7 +20,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
         - **Tests:** Setup `vitest` (or Jest) and `testing-library/react`.
     - **Deliverable:** Compilable app committed to the `CSU Reporting` repo.
 
-- [ ] **Configure CI/CD Pipeline (GitHub Actions)**
+- [x] **Configure CI/CD Pipeline (GitHub Actions)**
     - **Goal:** enforce code quality on every push.
     - **Requirements:**
         - Create `.github/workflows/ci.yml`.
@@ -31,7 +31,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
         - **Rules:** Workflow must pass for any PR to be merged.
     - **Deliverable:** Green build badge on the repo.
 
-- [ ] **Configure Environment Management**
+- [x] **Configure Environment Management**
     - **Goal:** Secure configuration constants.
     - **Requirements:**
         - Create `.env.local` template.
