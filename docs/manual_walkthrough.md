@@ -1,32 +1,30 @@
-# Manual Verification: Authentication
+# Manual Verification Walkthrough - SharePoint Integration
 
-This document guides you through the manual verification of the Authentication features (Azure EntraID).
+This guide describes how to verify the SharePoint Service implementation. Since this task is a backend service implementation without a UI, verification primarily relies on automated tests and code inspection.
 
-## Prerequisites
-- You have followed `authentication_instructions.md` and updated `.env.local` with valid Azure credentials.
-- The development server is running (`npm run dev`).
+## 1. Automated Verification
 
-## Scenarios
+Execute the unit tests to confirm the service correctly initializes the Microsoft Graph Client and handles responses.
 
-### 1. Unauthenticated Access
-1.  Open an incognito window or ensure you are logged out.
-2.  Navigate to `http://localhost:3000/`.
-3.  **Verify:** You are redirected to `/login`.
-    *   *Note*: The middleware is configured to redirect to login for protected routes.
-4.  **Verify:** The Login Page loads with the "Welcome Back" message and "Sign In" button.
+```bash
+npm test src/lib/sharepoint.test.ts
+```
 
-### 2. Sign In Flow
-1.  Click the "Sign In" button.
-2.  **Verify:** You are redirected to the Microsoft Login page.
-3.  Enter your organization credentials.
-4.  **Verify:** You are redirected back to `http://localhost:3000/`.
-5.  **Verify:** The homepage now displays "Current Session" with your Name and Email.
+**Expected Result:**
+- API calls to `Microsoft Graph` are mocked.
+- Tests pass (Green).
+- Error handling scenarios are covered.
 
-### 3. Sign Out Flow
-1.  On the homepage, click the "Sign Out" button.
-2.  **Verify:** You are signed out and the page updates (or redirects) to show the unauthenticated state (or back to login depending on flow).
-    *   *Note*: Default behavior might keep you on the page or redirect. Confirm you see "Not authenticated" or the Login page.
+## 2. Manual Code Inspection
 
-### 4. Direct Access to Protected Routes
-1.  Try to navigate to any other route (if enabled) while logged out.
-2.  **Verify:** Redirected to `/login`.
+Verify the `SharePointService` in `src/lib/sharepoint.ts`.
+
+1.  **Auth Integration**: Confirm `Client.init` uses the passed `accessToken`.
+2.  **View Constraint**: Note the comment regarding "This week's work" view. The current implementation fetches items which will need to be filtered by the calling component or via updated API calls once View IDs are available.
+
+## 3. Integration Verification (Future)
+
+To test against the real SharePoint API (once a UI or CLI harness is built):
+1.  Ensure `.env.local` has valid `AUTH_MICROSOFT_ENTRA_ID_*` credentials.
+2.  The user logging in must have access to the site `mwdsocal.sharepoint.com`.
+3.  Upon first login, consent to the `Sites.Read.All` permission.

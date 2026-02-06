@@ -54,7 +54,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
 
 ## 3. Data Integration (SharePoint)
 
-- [ ] **Create SharePoint Service Interface**
+- [x] **Create SharePoint Service Interface**
     - **Goal:** Abstract data fetching logic.
     - **Requirements:**
         - Create `src/lib/sharepoint.ts`.
