@@ -38,7 +38,7 @@ describe('SharePointService', () => {
         ]
 
         // Get the mocked client instance
-        const mockClient = (Client.init as any).mock.results[0].value
+        const mockClient = (Client.init as unknown as ReturnType<typeof vi.fn>).mock.results[0].value
         mockClient.get.mockResolvedValue({ value: mockProjects })
 
         const projects = await service.getProjects(mockSiteId, mockListId)
@@ -49,7 +49,7 @@ describe('SharePointService', () => {
     })
 
     it('should throw an error if fetching fails', async () => {
-        const mockClient = (Client.init as any).mock.results[0].value
+        const mockClient = (Client.init as unknown as ReturnType<typeof vi.fn>).mock.results[0].value
         mockClient.get.mockRejectedValue(new Error('Graph API Error'))
 
         await expect(service.getProjects(mockSiteId, mockListId)).rejects.toThrow('Failed to fetch projects from SharePoint')

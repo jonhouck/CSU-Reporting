@@ -4,7 +4,7 @@ export interface Project {
     id: string
     fields: {
         Title: string
-        [key: string]: any
+        [key: string]: unknown
     }
 }
 
