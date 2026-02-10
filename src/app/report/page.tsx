@@ -1,12 +1,26 @@
 "use client"
 
 import { useState } from "react"
-import { useSession } from "next-auth/react"
+import dynamic from "next/dynamic"
 import { ShiftReportForm, ShiftFormValues } from "@/components/shift-report-form"
 import { BulletPointEditor } from "@/components/bullet-point-editor"
 import { PhotoUpload, PhotoAttachment } from "@/components/photo-upload"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+
+// Dynamically import PDF components to avoid SSR issues
+const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+        ssr: false,
+        loading: () => <Button size="lg" disabled>Loading PDF Generator...</Button>,
+    }
+)
+
+const ShiftReportPDF = dynamic(
+    () => import("@/components/reports/ShiftReportPDF"),
+    { ssr: false }
+)
 
 // Mock projects for now until we have a real siteId/listId in ENV
 const MOCK_PROJECTS = [
@@ -16,7 +30,6 @@ const MOCK_PROJECTS = [
 ]
 
 export default function ReportingPage() {
-    const { data: session } = useSession()
     const [bullets, setBullets] = useState<string[]>([])
     const [photos, setPhotos] = useState<PhotoAttachment[]>([])
     const [shiftDetails, setShiftDetails] = useState<ShiftFormValues | null>(null)
@@ -25,14 +38,23 @@ export default function ReportingPage() {
         setShiftDetails(data)
     }
 
-    const handleGenerateReport = () => {
-        console.log("Generating Report with:", {
-            shiftDetails,
-            bullets,
-            photos,
-        })
-        alert("Report data captured! PDF Generation is the next task.")
+    const getProjectTitle = (id: string) => {
+        return MOCK_PROJECTS.find(p => p.id === id)?.title || "Unknown Project"
     }
+
+    // Prepare data for the PDF
+    const pdfProps = shiftDetails ? {
+        projectTitle: getProjectTitle(shiftDetails.projectId),
+        date: shiftDetails.date,
+        shift: shiftDetails.shift,
+        bullets: bullets,
+        photos: photos.map(p => ({
+            id: p.id,
+            preview: p.preview,
+            caption: p.caption,
+            file: p.file
+        }))
+    } : null
 
     return (
         <div className="container mx-auto py-8 px-4 max-w-4xl space-y-8">
@@ -70,13 +92,23 @@ export default function ReportingPage() {
                         <Button variant="outline" onClick={() => window.location.reload()}>
                             Reset Form
                         </Button>
-                        <Button
-                            size="lg"
-                            onClick={handleGenerateReport}
-                            disabled={!shiftDetails || bullets.length === 0}
-                        >
-                            Generate PDF Report
-                        </Button>
+
+                        {shiftDetails && bullets.length > 0 && pdfProps ? (
+                            <PDFDownloadLink
+                                document={<ShiftReportPDF {...pdfProps} />}
+                                fileName={`ShiftReport_${shiftDetails.projectId}_${shiftDetails.date.toISOString().split('T')[0]}.pdf`}
+                            >
+                                {({ loading }) => (
+                                    <Button size="lg" disabled={loading}>
+                                        {loading ? "Generating Report..." : "Download PDF Report"}
+                                    </Button>
+                                )}
+                            </PDFDownloadLink>
+                        ) : (
+                            <Button size="lg" disabled>
+                                Generate PDF Report
+                            </Button>
+                        )}
                     </div>
                     {!shiftDetails && (
                         <p className="text-xs text-center text-muted-foreground">
