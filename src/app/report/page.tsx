@@ -1,7 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
+import { useState } from "react"
 import dynamic from "next/dynamic"
 import { ShiftReportForm, ShiftFormValues } from "@/components/shift-report-form"
 import { BulletPointEditor } from "@/components/bullet-point-editor"
@@ -31,15 +30,9 @@ const MOCK_PROJECTS = [
 ]
 
 export default function ReportingPage() {
-    const { data: session } = useSession()
     const [bullets, setBullets] = useState<string[]>([])
     const [photos, setPhotos] = useState<PhotoAttachment[]>([])
     const [shiftDetails, setShiftDetails] = useState<ShiftFormValues | null>(null)
-    const [isClient, setIsClient] = useState(false)
-
-    useEffect(() => {
-        setIsClient(true)
-    }, [])
 
     const handleShiftSubmit = (data: ShiftFormValues) => {
         setShiftDetails(data)
@@ -100,12 +93,12 @@ export default function ReportingPage() {
                             Reset Form
                         </Button>
 
-                        {isClient && shiftDetails && bullets.length > 0 && pdfProps ? (
+                        {shiftDetails && bullets.length > 0 && pdfProps ? (
                             <PDFDownloadLink
                                 document={<ShiftReportPDF {...pdfProps} />}
                                 fileName={`ShiftReport_${shiftDetails.projectId}_${shiftDetails.date.toISOString().split('T')[0]}.pdf`}
                             >
-                                {({ blob, url, loading, error }) => (
+                                {({ loading }) => (
                                     <Button size="lg" disabled={loading}>
                                         {loading ? "Generating Report..." : "Download PDF Report"}
                                     </Button>
