@@ -36,6 +36,11 @@ This guide provides steps to manually verify the functionality of the shift repo
 5.  Click the "X" button on one of the photos to remove it.
 
 ### 5. Report Generation
-1.  Verify that the **"Generate PDF Report"** button is enabled only after saving shift details and adding at least one bullet point.
-2.  Click **"Generate PDF Report"**.
-3.  Verify that an alert appears confirming the data capture. (Actual PDF generation implementation is Task #5).
+ 1.  Verify that the **"Download PDF Report"** button is enabled only after saving shift details and adding at least one bullet point. IT MAY TAKE A MOMENT TO GENERATE.
+ 2.  Click **"Download PDF Report"**.
+ 3.  Verify that a PDF file is downloaded to your machine (e.g., `ShiftReport_[Project]_[Date].pdf`).
+ 4.  Open the PDF and verify:
+     - The CSU Logo is present in the header.
+     - The Project, Date, and Shift match your selection.
+     - The work details bullet points are listed correctly.
+     - The photos are displayed with their captions (if any).
