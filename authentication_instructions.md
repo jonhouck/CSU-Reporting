@@ -32,27 +32,28 @@ Please follow these steps and provide the generated credentials.
 5.  **Expires**: Select an appropriate duration (e.g., 6 months or 12 months).
 6.  Click **Add**.
 7.  **IMPORTANT:** Copy the **Value** immediately. You will not be able to see it again. This is your `AUTH_MICROSOFT_ENTRA_ID_SECRET`.
+<YOUR_CLIENT_SECRET_VALUE_HERE>
 
 ## 4. Gather Credentials
 
 You need to collect the following three values to configure the application:
 
-1.  **Client ID**: Go to **Overview**. Copy the **Application (client) ID**.
-2.  **Tenant ID**: Go to **Overview**. Copy the **Directory (tenant) ID**.
-3.  **Client Secret**: The **Value** you copied in Step 3.
+1.  **Client ID**: Go to **Overview**. Copy the **Application (client) ID**. <YOUR_CLIENT_ID_HERE>
+2.  **Tenant ID**: Go to **Overview**. Copy the **Directory (tenant) ID**. <YOUR_TENANT_ID_HERE>
+3.  **Client Secret**: The **Value** you copied in Step 3. <YOUR_CLIENT_SECRET_VALUE_HERE>
 
 ## 5. Configure Local Environment
 
 Open your `.env.local` file (create it if it doesn't exist) and add the following:
 
 ```bash
-AUTH_MICROSOFT_ENTRA_ID_ID="<Your Application (client) ID>"
-AUTH_MICROSOFT_ENTRA_ID_SECRET="<Your Client Secret Value>"
-AUTH_MICROSOFT_ENTRA_ID_TENANT_ID="<Your Directory (tenant) ID>"
+AUTH_MICROSOFT_ENTRA_ID_ID=""
+AUTH_MICROSOFT_ENTRA_ID_SECRET=""
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=""
 
 # Generate a random secret for the app encryption
 # You can generate one by running `npx auth secret` or `openssl rand -base64 32`
-AUTH_SECRET="<Randomly Generated String>"
+AUTH_SECRET=""
 ```
 
 ## 6. Token Configuration (Optional but Recommended)

@@ -47,6 +47,9 @@ export default async function Home() {
         </div>
 
         <div className="flex gap-4">
+          <Button asChild variant="default">
+            <Link href="/report">Create Daily Report</Link>
+          </Button>
           <Button asChild variant="outline">
             <Link href="/login">Go to Login Page</Link>
           </Button>
