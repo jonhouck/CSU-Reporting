@@ -34,7 +34,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 const shiftFormSchema = z.object({
     projectId: z.string().min(1, "Please select a project."),
     date: z.date({
-        invalid_type_error: "A date of shift is required.",
+        message: "A date of shift is required.",
     }),
     shift: z.enum(["Day", "Swings", "Graveyard"]),
 })
