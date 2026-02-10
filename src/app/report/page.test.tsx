@@ -2,7 +2,17 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import ReportingPage from './page'
 
-// Mock PDFDownloadLink and ShiftReportPDF since they use dynamic imports and canvas
+// Mock DownloadPDFButton to avoid full PDF generation during tests
+vi.mock('@/components/reports/DownloadPDFButton', () => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    default: ({ projectTitle, date, shift, bullets, photos, fileName }: any) => (
+        <button data-testid="mock-download-btn" onClick={() => console.log('Download clicked', { projectTitle, date, shift, bullets, photos, fileName })}>
+            Download PDF Report
+        </button>
+    )
+}))
+
+// Mock next/dynamic
 vi.mock('next/dynamic', () => ({
     default: () => {
         const MockComponent = () => <div>Mock Dynamic Component</div>
@@ -10,36 +20,32 @@ vi.mock('next/dynamic', () => ({
     }
 }))
 
-// We need to mock the dynamic imports specifically in the page component
-// But since we are mocking next/dynamic, it should handle it.
-// However, to test the interaction, we might need a more specific mock.
-
-vi.mock('@react-pdf/renderer', () => ({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    PDFDownloadLink: ({ children }: any) => <div>{children({ blob: null, url: null, loading: false, error: null })}</div>,
-    Document: () => <div>Doc</div>,
-    Page: () => <div>Page</div>,
-}))
-
 describe('ReportingPage', () => {
-    it('renders the form and requires input before generating report', async () => {
-        render(
-            <ReportingPage />
-        )
+    it('renders the main heading', () => {
+        render(<ReportingPage />)
+        const heading = screen.getByRole('heading', { level: 1, name: /Daily Shift Report/i })
+        expect(heading).toBeDefined()
+    })
 
-        // Title
-        expect(screen.getByText('Daily Shift Report')).toBeInTheDocument()
+    it('renders the subtext', () => {
+        render(<ReportingPage />)
+        const subtext = screen.getByText(/Complete the details below to generate your shift report./i)
+        expect(subtext).toBeDefined()
+    })
 
-        // Generate button should be disabled initially
-        const generateBtn = screen.getByText('Generate PDF Report')
+    it('renders the form sections', () => {
+        render(<ReportingPage />)
+        // Check for specific text that appears in the sub-components
+        expect(screen.getByText('Project')).toBeDefined()
+        expect(screen.getByText('Work Details')).toBeDefined()
+        expect(screen.getByText('Report Photos')).toBeDefined()
+    })
+
+    it('renders the download button as disabled initially', () => {
+        render(<ReportingPage />)
+        // Initially, the main "Generate PDF Report" button is shown and disabled
+        const generateBtn = screen.getByRole('button', { name: /Generate PDF Report/i })
+        expect(generateBtn).toBeDefined()
         expect(generateBtn).toBeDisabled()
-
-        // Note: Filling out the form fully in JSDOM with Radix UI Selects and Calendars can be complex.
-        // For this high-level test, we primarily verify that the page structure is correct
-        // and the "Download" button logic exists. 
-
-        // Since we can't easily interact with the complex form components without setup,
-        // we'll rely on unit tests for the form components themselves.
-        // Here we just check the initial state.
     })
 })

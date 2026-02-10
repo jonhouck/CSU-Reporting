@@ -8,17 +8,9 @@ import { PhotoUpload, PhotoAttachment } from "@/components/photo-upload"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
-// Dynamically import PDF components to avoid SSR issues
-const PDFDownloadLink = dynamic(
-    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-    {
-        ssr: false,
-        loading: () => <Button size="lg" disabled>Loading PDF Generator...</Button>,
-    }
-)
-
-const ShiftReportPDF = dynamic(
-    () => import("@/components/reports/ShiftReportPDF"),
+// Dynamically import DownloadButton to avoid SSR issues with react-pdf
+const DownloadPDFButton = dynamic(
+    () => import("@/components/reports/DownloadPDFButton"),
     { ssr: false }
 )
 
@@ -94,16 +86,10 @@ export default function ReportingPage() {
                         </Button>
 
                         {shiftDetails && bullets.length > 0 && pdfProps ? (
-                            <PDFDownloadLink
-                                document={<ShiftReportPDF {...pdfProps} />}
+                            <DownloadPDFButton
+                                {...pdfProps}
                                 fileName={`ShiftReport_${shiftDetails.projectId}_${shiftDetails.date.toISOString().split('T')[0]}.pdf`}
-                            >
-                                {({ loading }) => (
-                                    <Button size="lg" disabled={loading}>
-                                        {loading ? "Generating Report..." : "Download PDF Report"}
-                                    </Button>
-                                )}
-                            </PDFDownloadLink>
+                            />
                         ) : (
                             <Button size="lg" disabled>
                                 Generate PDF Report
