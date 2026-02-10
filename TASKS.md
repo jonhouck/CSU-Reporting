@@ -66,7 +66,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
 
 ## 4. UI Components (Forms & Input)
 
-- [ ] **Design "Shift Details" Form**
+- [x] **Design "Shift Details" Form**
     - **Goal:** Capture meta-data.
     - **Requirements:**
         - `ShiftReportForm` using `react-hook-form` + `zod`.
@@ -76,7 +76,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
             - *Automation:* Simulate user selection and form state update.
     - **Deliverable:** Functional form with passing validation tests.
 
-- [ ] **Implement "Bullet Point" Editor**
+- [x] **Implement "Bullet Point" Editor**
     - **Goal:** Freeform text entries.
     - **Requirements:**
         - Dynamic list (Add/Delete rows).
@@ -84,7 +84,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
             - *Unit:* Add item, delete item, verify state.
     - **Deliverable:** Array input component with tests.
 
-- [ ] **Build Photo Upload Component**
+- [x] **Build Photo Upload Component**
     - **Goal:** Handle attachments.
     - **Requirements:**
         - Drag & Drop zone.
@@ -95,7 +95,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
 
 ## 5. Report Generation (PDF)
 
-- [ ] **Implement PDF Document Definition**
+- [x] **Implement PDF Document Definition**
     - **Goal:** PDF Template.
     - **Requirements:**
         - `@react-pdf/renderer` layout matching "Power App Request.pdf".
@@ -103,7 +103,7 @@ This file serves as the backlog, critical path, and issue tracker for the develo
             - *Snapshot:* Render PDF to stream/blob and verify structure (if possible) or visually verify via test harness.
     - **Deliverable:** React component definition for the PDF.
 
-- [ ] **Finalize "Download Report" Flow**
+- [x] **Finalize "Download Report" Flow**
     - **Goal:** End-to-end generation.
     - **Requirements:**
         - Connect Form Data -> PDF Document.
