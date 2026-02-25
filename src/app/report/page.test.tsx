@@ -25,6 +25,11 @@ vi.mock('@/components/user-widget', () => ({
 // Mock next/server to avoid next-auth resolution error
 vi.mock('next/server', () => ({}))
 
+// Mock the sharepoint server action to avoid next-auth and server imports
+vi.mock('@/app/actions/sharepoint', () => ({
+    getSharePointProjects: vi.fn().mockResolvedValue([])
+}))
+
 // Mock next/dynamic
 vi.mock('next/dynamic', () => ({
     default: () => {

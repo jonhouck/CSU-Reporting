@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { format } from "date-fns"
@@ -36,7 +37,7 @@ const shiftFormSchema = z.object({
     date: z.date({
         message: "A date of shift is required.",
     }),
-    shift: z.enum(["Day", "Swings", "Graveyard"]),
+    shift: z.enum(["Day Shift", "Night Shift"]),
 })
 
 export type ShiftFormValues = z.infer<typeof shiftFormSchema>
@@ -49,10 +50,11 @@ interface Project {
 interface ShiftReportFormProps {
     projects: Project[]
     onSubmit: (data: ShiftFormValues) => void
+    onProjectChange?: (projectId: string) => void
     defaultValues?: Partial<ShiftFormValues>
 }
 
-export function ShiftReportForm({ projects, onSubmit, defaultValues }: ShiftReportFormProps) {
+export function ShiftReportForm({ projects, onSubmit, onProjectChange, defaultValues }: ShiftReportFormProps) {
     const form = useForm<ShiftFormValues>({
         resolver: zodResolver(shiftFormSchema),
         defaultValues: {
@@ -61,6 +63,15 @@ export function ShiftReportForm({ projects, onSubmit, defaultValues }: ShiftRepo
             date: defaultValues?.date || new Date(),
         },
     })
+
+    // eslint-disable-next-line react-hooks/incompatible-library
+    const selectedProjectId = form.watch("projectId")
+
+    useEffect(() => {
+        if (onProjectChange && selectedProjectId) {
+            onProjectChange(selectedProjectId)
+        }
+    }, [selectedProjectId, onProjectChange])
 
     return (
         <Card className="w-full">
@@ -151,9 +162,8 @@ export function ShiftReportForm({ projects, onSubmit, defaultValues }: ShiftRepo
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="Day">Day</SelectItem>
-                                                <SelectItem value="Swings">Swings</SelectItem>
-                                                <SelectItem value="Graveyard">Graveyard</SelectItem>
+                                                <SelectItem value="Day Shift">Day Shift</SelectItem>
+                                                <SelectItem value="Night Shift">Night Shift</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
