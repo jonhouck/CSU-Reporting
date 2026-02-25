@@ -6,6 +6,7 @@ export interface Project {
         Title: string
         Description?: string
         ProjectStatus?: string
+        field_4?: string
         [key: string]: unknown
     }
 }
@@ -52,8 +53,8 @@ export class SharePointService {
                 (item) => {
                     const f = item.fields;
 
-                    // 1. Try common status keys
-                    const status = f.ProjectStatus || f.Project_x0020_Status || f.Status || f.OData__Status;
+                    // 1. Try common status keys including field_4 as identified from the SharePoint payload
+                    const status = f.field_4 || f.ProjectStatus || f.Project_x0020_Status || f.Status || f.OData__Status;
                     if (typeof status === 'string') {
                         const statusLower = status.toLowerCase();
                         if (statusLower === "this weeks work" || statusLower === "this week's work") {
