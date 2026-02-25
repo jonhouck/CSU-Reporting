@@ -6,37 +6,45 @@ This guide explains how to fetch the required environment variables for SharePoi
 
 The Microsoft Graph API requires a specific format for the Site ID: `hostname,spsite.id,spweb.id`.
 
-### Method A: Using Graph Explorer (Recommended)
-1. Go to [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer).
-2. Sign in with your enterprise account.
-3. Run a `GET` query to search for your site:
-   ```
-   https://graph.microsoft.com/v1.0/sites/mwdsocal.sharepoint.com:/teams/CSUMANAGERS
-   ```
-4. In the JSON response, look for the `id` property. It will look something like this:
-   `mwdsocal.sharepoint.com,12345678-1234-1234-1234-123456789012,87654321-4321-4321-4321-210987654321`
-5. Copy this entire string and set it as your `SHAREPOINT_SITE_ID` in `.env.local`.
+### Method: Using your Web Browser (No Graph Explorer Required)
+1. Go to your SharePoint site in your browser: `https://mwdsocal.sharepoint.com/teams/CSUMANAGERS`
+2. **Find the Site Collection ID (`spsite.id`)**:
+   - In a new tab, navigate to this URL: `https://mwdsocal.sharepoint.com/teams/CSUMANAGERS/_api/site/id`
+   - You will see an XML response with a GUID (e.g., `12345678-1234-1234-1234-123456789012`). Save this.
+3. **Find the Web ID (`spweb.id`)**:
+   - In another tab, navigate to this URL: `https://mwdsocal.sharepoint.com/teams/CSUMANAGERS/_api/web/id`
+   - You will see another XML response with a different GUID (e.g., `87654321-4321-4321-4321-210987654321`). Save this.
+4. **Construct the Final String**:
+   - Format: `mwdsocal.sharepoint.com,{SiteCollectionID},{WebID}`
+   - Example: `mwdsocal.sharepoint.com,12345678-1234-1234-1234-123456789012,87654321-4321-4321-4321-210987654321`
+   - Set this entire constructed string as your `SHAREPOINT_SITE_ID` in `.env.local`.
 
 ## 2. Finding the SharePoint List ID (`SHAREPOINT_LIST_ID`)
 
-Once you have the Site ID, you can find the List ID.
+### Method: From the SharePoint List Settings
+1. Navigate to your "Project Tracker" list in SharePoint.
+2. Click the **Gear icon** (Settings) in the top-right corner.
+3. Select **List settings**.
+4. In your browser's address bar, look at the URL. It will look like this:
+   `.../listedit.aspx?List=%7Ba1b2c3d4-e5f6-7a8b-9c0d-1234567890ab%7D`
+5. Extract the part between `%7B` and `%7D`.
+   - In the example above, the ID is `a1b2c3d4-e5f6-7a8b-9c0d-1234567890ab`.
+6. Set this GUID as your `SHAREPOINT_LIST_ID` in `.env.local`.
 
-### Method A: Using Graph Explorer (Recommended)
-1. In Graph Explorer, run a `GET` query to list all lists in that site:
-   ```
-   https://graph.microsoft.com/v1.0/sites/{SHAREPOINT_SITE_ID}/lists
-   ```
-   *(Replace `{SHAREPOINT_SITE_ID}` with the ID you found in Step 1)*
-2. Search the response for the list named "Project Tracker".
-3. Copy the `id` property of that list (it will be a standard GUID, e.g., `a1b2c3d4-e5f6-7a8b-9c0d-1234567890ab`).
-4. Set this GUID as your `SHAREPOINT_LIST_ID` in `.env.local`.
+## 3. Example `.env.local` Configuration
 
-### Method B: From the SharePoint URL
-If you cannot use Graph Explorer, you can extract the List ID from the URL you provided:
-1. URL: `https://mwdsocal.sharepoint.com/teams/CSUMANAGERS/Lists/query%2024187b54fb7664efc99b432799457cee3/AllItems.aspx`
-2. Sometimes, you can go to **List Settings** in SharePoint.
-3. The URL of the settings page will contain `List=%7B...%7D`. 
-4. Decode the `%7B` (which is `{`) and `%7D` (which is `}`). The GUID inside is your `SHAREPOINT_LIST_ID`.
+Once you have gathered your credentials and IDs, your `.env.local` file should look like this (with your actual values replacing the placeholders):
+
+```env
+# Azure Entra ID Credentials
+AUTH_MICROSOFT_ENTRA_ID_ID="your-client-id-here"
+AUTH_MICROSOFT_ENTRA_ID_SECRET="your-client-secret-here"
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID="your-tenant-id-here"
+
+# SharePoint Configuration
+SHAREPOINT_SITE_ID="mwdsocal.sharepoint.com,12345678-1234-1234-1234-123456789012,87654321-4321-4321-4321-210987654321"
+SHAREPOINT_LIST_ID="a1b2c3d4-e5f6-7a8b-9c0d-1234567890ab"
+```
 
 ## 3. Verifying Entra ID App Permissions
 
