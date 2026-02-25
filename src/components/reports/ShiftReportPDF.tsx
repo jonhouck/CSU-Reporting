@@ -132,6 +132,10 @@ export interface ShiftReportPDFProps {
     shift: string;
     bullets: string[];
     photos: { file?: File; id: string; preview: string; caption: string }[];
+    user?: {
+        name?: string | null;
+        email?: string | null;
+    };
 }
 
 const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
@@ -140,6 +144,7 @@ const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
     shift,
     bullets,
     photos,
+    user,
 }) => (
     <Document>
         <Page size="A4" style={styles.page}>
@@ -151,6 +156,11 @@ const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
                 <View style={styles.headerText}>
                     <Text style={styles.title}>Shift Report</Text>
                     <Text style={styles.subHeader}>Construction Services Unit</Text>
+                    {user?.name && (
+                        <Text style={{ ...styles.subHeader, marginTop: 8, fontStyle: 'italic' }}>
+                            Prepared By: {user.name}
+                        </Text>
+                    )}
                 </View>
             </View>
 

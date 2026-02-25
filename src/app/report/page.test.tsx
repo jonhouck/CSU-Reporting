@@ -12,6 +12,19 @@ vi.mock('@/components/reports/DownloadPDFButton', () => ({
     )
 }))
 
+// Mock next-auth/react
+vi.mock('next-auth/react', () => ({
+    useSession: () => ({ data: null, status: 'unauthenticated' })
+}))
+
+// Mock UserWidget to prevent loading auth and next-auth
+vi.mock('@/components/user-widget', () => ({
+    UserWidget: () => <div data-testid="user-widget-mock">Mock User Widget</div>
+}))
+
+// Mock next/server to avoid next-auth resolution error
+vi.mock('next/server', () => ({}))
+
 // Mock next/dynamic
 vi.mock('next/dynamic', () => ({
     default: () => {

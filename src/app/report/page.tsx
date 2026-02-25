@@ -1,10 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import { useSession } from "next-auth/react"
 import dynamic from "next/dynamic"
 import { ShiftReportForm, ShiftFormValues } from "@/components/shift-report-form"
 import { BulletPointEditor } from "@/components/bullet-point-editor"
 import { PhotoUpload, PhotoAttachment } from "@/components/photo-upload"
+import { UserWidget } from "@/components/user-widget"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
@@ -22,6 +24,7 @@ const MOCK_PROJECTS = [
 ]
 
 export default function ReportingPage() {
+    const { data: session } = useSession()
     const [bullets, setBullets] = useState<string[]>([])
     const [photos, setPhotos] = useState<PhotoAttachment[]>([])
     const [shiftDetails, setShiftDetails] = useState<ShiftFormValues | null>(null)
@@ -45,14 +48,20 @@ export default function ReportingPage() {
             preview: p.preview,
             caption: p.caption,
             file: p.file
-        }))
+        })),
+        user: session?.user || undefined
     } : null
 
     return (
         <div className="container mx-auto py-8 px-4 max-w-4xl space-y-8">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold tracking-tight">Daily Shift Report</h1>
-                <p className="text-muted-foreground">Complete the details below to generate your shift report.</p>
+            <div className="flex flex-row justify-between items-start gap-4">
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-3xl font-bold tracking-tight">Daily Shift Report</h1>
+                    <p className="text-muted-foreground">Complete the details below to generate your shift report.</p>
+                </div>
+                <div>
+                    <UserWidget />
+                </div>
             </div>
 
             <div className="grid grid-cols-1 gap-8">
