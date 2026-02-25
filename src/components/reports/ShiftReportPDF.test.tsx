@@ -41,7 +41,10 @@ describe('ShiftReportPDF', () => {
                     caption: 'Test Photo',
                     file: new File([''], 'test.png', { type: 'image/png' })
                 }
-            ]
+            ],
+            user: {
+                name: 'Test Setup User'
+            }
         }
 
         // Since we mocked the primitives, we can render it with RTL

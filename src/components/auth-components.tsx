@@ -10,7 +10,7 @@ export function SignIn({
         <form
             action={async () => {
                 "use server"
-                await signIn(provider)
+                await signIn(provider, { redirectTo: "/report" })
             }}
         >
             <Button {...props}>Sign In</Button>
@@ -32,3 +32,5 @@ export function SignOut(props: React.ComponentPropsWithRef<typeof Button>) {
         </form>
     )
 }
+
+

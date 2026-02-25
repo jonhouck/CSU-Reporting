@@ -9,12 +9,16 @@ export default defineConfig({
         globals: true,
         setupFiles: ['./vitest.setup.ts'],
         alias: {
-            '@': path.resolve(__dirname, './src')
+            '@': path.resolve(__dirname, './src'),
+            'next/server': path.resolve(__dirname, './vitest.setup.ts'),
+            'next-auth/react': path.resolve(__dirname, './__mocks__/next-auth-react.ts')
         }
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './src')
+            '@': path.resolve(__dirname, './src'),
+            'next/server': path.resolve(__dirname, './vitest.setup.ts'),
+            'next-auth/react': path.resolve(__dirname, './__mocks__/next-auth-react.ts')
         }
     }
 })

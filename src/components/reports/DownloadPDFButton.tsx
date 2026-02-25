@@ -16,6 +16,10 @@ interface DownloadPDFButtonProps {
         caption: string
         file: File
     }>
+    user?: {
+        name?: string | null
+        email?: string | null
+    }
     fileName: string
 }
 
@@ -25,6 +29,7 @@ export default function DownloadPDFButton({
     shift,
     bullets,
     photos,
+    user,
     fileName
 }: DownloadPDFButtonProps) {
     const [isGenerating, setIsGenerating] = useState(false)
@@ -41,6 +46,7 @@ export default function DownloadPDFButton({
                     shift={shift}
                     bullets={bullets}
                     photos={photos}
+                    user={user}
                 />
             ).toBlob()
 
