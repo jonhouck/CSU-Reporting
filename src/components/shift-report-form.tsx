@@ -94,11 +94,17 @@ export function ShiftReportForm({ projects, onSubmit, onProjectChange, defaultVa
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {projects.map((project) => (
-                                                <SelectItem key={project.id} value={project.id}>
-                                                    {project.title}
+                                            {projects.length > 0 ? (
+                                                projects.map((project) => (
+                                                    <SelectItem key={project.id} value={project.id}>
+                                                        {project.title}
+                                                    </SelectItem>
+                                                ))
+                                            ) : (
+                                                <SelectItem value="none" disabled>
+                                                    No projects found
                                                 </SelectItem>
-                                            ))}
+                                            )}
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />

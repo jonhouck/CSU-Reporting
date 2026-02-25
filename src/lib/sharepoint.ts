@@ -46,10 +46,21 @@ export class SharePointService {
 
             const allItems = response.value as Project[]
 
-            // Filter projects assigned to "This Weeks Work"
+            // Filter projects assigned to "This Weeks Work" 
+            // Handles missing or modified internal SharePoint field names 
             const weeklyProjects = allItems.filter(
-                (item) => item.fields.ProjectStatus === "This Weeks Work"
+                (item) => {
+                    const f = item.fields;
+                    const status = f.ProjectStatus || f.Project_x0020_Status || f.Status || f.OData__Status;
+                    return status === "This Weeks Work" || status === "This Week's Work";
+                }
             )
+
+            console.log(`[SharePoint Debug] Fetched ${allItems.length} total raw items. Filtered down to ${weeklyProjects.length} matching "This Weeks Work".`)
+
+            if (weeklyProjects.length === 0 && allItems.length > 0) {
+                console.log(`[SharePoint Debug] Missing matching items! Here are the actual fields available on the first item:`, Object.keys(allItems[0].fields))
+            }
 
             return weeklyProjects
         } catch (error) {
