@@ -51,8 +51,23 @@ export class SharePointService {
             const weeklyProjects = allItems.filter(
                 (item) => {
                     const f = item.fields;
+
+                    // 1. Try common status keys
                     const status = f.ProjectStatus || f.Project_x0020_Status || f.Status || f.OData__Status;
-                    return status === "This Weeks Work" || status === "This Week's Work";
+                    if (status === "This Weeks Work" || status === "This Week's Work") {
+                        return true;
+                    }
+
+                    // 2. Dynamic Fallback: SharePoint often masks custom columns as "field_1", "field_2", etc.
+                    // If we didn't find it via a known key, sweep all field values for our target string.
+                    for (const key in f) {
+                        if (typeof f[key] === 'string' && (f[key] === "This Weeks Work" || f[key] === "This Week's Work")) {
+                            // We found the status in an opaque field (e.g., field_24).
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
             )
 
