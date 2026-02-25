@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import dynamic from "next/dynamic"
 import { ShiftReportForm, ShiftFormValues } from "@/components/shift-report-form"
@@ -9,6 +9,8 @@ import { PhotoUpload, PhotoAttachment } from "@/components/photo-upload"
 import { UserWidget } from "@/components/user-widget"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { getSharePointProjects } from "@/app/actions/sharepoint"
+import type { Project as SPProject } from "@/lib/sharepoint"
 
 // Dynamically import DownloadButton to avoid SSR issues with react-pdf
 const DownloadPDFButton = dynamic(
@@ -16,26 +18,45 @@ const DownloadPDFButton = dynamic(
     { ssr: false }
 )
 
-// Mock projects for now until we have a real siteId/listId in ENV
-const MOCK_PROJECTS = [
-    { id: "1", title: "Site Shutdown - Main North" },
-    { id: "2", title: "Project Alpha - Pipeline Repair" },
-    { id: "3", title: "CSU Maintenance - Western Region" },
-]
+// Removed mock projects, using real SharePoint data now
 
 export default function ReportingPage() {
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
     const [bullets, setBullets] = useState<string[]>([])
     const [photos, setPhotos] = useState<PhotoAttachment[]>([])
     const [shiftDetails, setShiftDetails] = useState<ShiftFormValues | null>(null)
+    const [projects, setProjects] = useState<SPProject[]>([])
+    const [hasLoadedProjects, setHasLoadedProjects] = useState(false)
+
+    useEffect(() => {
+        if (session?.user) {
+            getSharePointProjects().then((data) => {
+                setProjects(data)
+                setHasLoadedProjects(true)
+            }).catch((error) => {
+                console.error("Failed to load projects", error)
+                setHasLoadedProjects(true)
+            })
+        }
+    }, [session])
+
+    const isLoadingProjects = status === "loading" || (status === "authenticated" && !hasLoadedProjects)
 
     const handleShiftSubmit = (data: ShiftFormValues) => {
         setShiftDetails(data)
     }
 
     const getProjectTitle = (id: string) => {
-        return MOCK_PROJECTS.find(p => p.id === id)?.title || "Unknown Project"
+        return projects.find(p => p.id === id)?.fields?.Title || "Unknown Project"
     }
+
+    const selectedProject = projects.find(p => p.id === shiftDetails?.projectId)
+    const projectDescription = selectedProject?.fields?.Description || ""
+
+    const mappedProjects = projects.map(p => ({
+        id: p.id,
+        title: p.fields?.Title || "Untitled Project"
+    }))
 
     // Prepare data for the PDF
     const pdfProps = shiftDetails ? {
@@ -66,12 +87,26 @@ export default function ReportingPage() {
 
             <div className="grid grid-cols-1 gap-8">
                 <section className="space-y-4">
-                    <ShiftReportForm
-                        projects={MOCK_PROJECTS}
-                        onSubmit={handleShiftSubmit}
-                        defaultValues={shiftDetails || undefined}
-                    />
+                    {isLoadingProjects ? (
+                        <p className="text-sm text-muted-foreground">Loading projects from SharePoint...</p>
+                    ) : (
+                        <ShiftReportForm
+                            projects={mappedProjects}
+                            onSubmit={handleShiftSubmit}
+                            defaultValues={shiftDetails || undefined}
+                            onProjectChange={(projectId) => {
+                                setShiftDetails(prev => prev ? { ...prev, projectId } : { projectId, shift: "Day Shift", date: new Date() })
+                            }}
+                        />
+                    )}
                 </section>
+
+                {projectDescription && (
+                    <section className="space-y-2 bg-secondary/20 p-4 rounded-lg">
+                        <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">Project Description</h3>
+                        <p className="text-sm">{projectDescription}</p>
+                    </section>
+                )}
 
                 <section className="space-y-4">
                     <BulletPointEditor

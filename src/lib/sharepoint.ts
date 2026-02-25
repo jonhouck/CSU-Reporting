@@ -4,6 +4,8 @@ export interface Project {
     id: string
     fields: {
         Title: string
+        Description?: string
+        ProjectStatus?: string
         [key: string]: unknown
     }
 }
@@ -37,11 +39,19 @@ export class SharePointService {
 
         try {
             const response = await this.client.api(`/sites/${siteId}/lists/${listId}/items`)
+                .header('Prefer', 'HonorNonIndexedQueriesWarningMayFailRandomly')
                 .expand('fields')
-                .top(50) // Limit to top 50 mostly relevant items
+                .top(500) // Fetch a larger batch
                 .get()
 
-            return response.value as Project[]
+            const allItems = response.value as Project[]
+
+            // Filter projects assigned to "This Weeks Work"
+            const weeklyProjects = allItems.filter(
+                (item) => item.fields.ProjectStatus === "This Weeks Work"
+            )
+
+            return weeklyProjects
         } catch (error) {
             console.error("Error fetching projects from SharePoint:", error)
             throw new Error("Failed to fetch projects from SharePoint")

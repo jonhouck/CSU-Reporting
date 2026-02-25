@@ -8,6 +8,7 @@ vi.mock('@microsoft/microsoft-graph-client', () => {
         Client: {
             init: vi.fn().mockReturnValue({
                 api: vi.fn().mockReturnThis(),
+                header: vi.fn().mockReturnThis(),
                 expand: vi.fn().mockReturnThis(),
                 top: vi.fn().mockReturnThis(),
                 get: vi.fn()
@@ -32,20 +33,21 @@ describe('SharePointService', () => {
     })
 
     it('should fetch projects successfully', async () => {
-        const mockProjects = [
-            { id: '1', fields: { Title: 'Project A' } },
-            { id: '2', fields: { Title: 'Project B' } }
+        const mockFetchData = [
+            { id: '1', fields: { Title: 'Project A', ProjectStatus: 'This Weeks Work' } },
+            { id: '2', fields: { Title: 'Project B', ProjectStatus: 'This Weeks Work' } },
+            { id: '3', fields: { Title: 'Project C', ProjectStatus: 'Completed' } }
         ]
 
         // Get the mocked client instance
         const mockClient = (Client.init as unknown as ReturnType<typeof vi.fn>).mock.results[0].value
-        mockClient.get.mockResolvedValue({ value: mockProjects })
+        mockClient.get.mockResolvedValue({ value: mockFetchData })
 
         const projects = await service.getProjects(mockSiteId, mockListId)
 
         expect(mockClient.api).toHaveBeenCalledWith(`/sites/${mockSiteId}/lists/${mockListId}/items`)
         expect(mockClient.expand).toHaveBeenCalledWith('fields')
-        expect(projects).toEqual(mockProjects)
+        expect(projects).toEqual([mockFetchData[0], mockFetchData[1]])
     })
 
     it('should throw an error if fetching fails', async () => {
