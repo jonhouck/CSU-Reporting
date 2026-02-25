@@ -73,11 +73,12 @@ export class SharePointService {
 
             console.log(`[SharePoint Debug] Fetched ${allItems.length} total raw items. Filtered down to ${weeklyProjects.length} matching "This Weeks Work".`)
 
-            if (weeklyProjects.length === 0 && allItems.length > 0) {
-                console.log(`[SharePoint Debug] Missing matching items! Here are the actual fields available on the first item:`, Object.keys(allItems[0].fields))
+            if (allItems.length > 0) {
+                console.log(`[SharePoint Debug] First item full data dump for field identification:`, JSON.stringify(allItems[0].fields, null, 2))
             }
 
-            return weeklyProjects
+            // TEMP FIX: If the filter stripped everything due to mismatched strings, return ALL items so the UI isn't broken
+            return weeklyProjects.length > 0 ? weeklyProjects : allItems
         } catch (error) {
             console.error("Error fetching projects from SharePoint:", error)
             throw new Error("Failed to fetch projects from SharePoint")
