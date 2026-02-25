@@ -54,16 +54,22 @@ export class SharePointService {
 
                     // 1. Try common status keys
                     const status = f.ProjectStatus || f.Project_x0020_Status || f.Status || f.OData__Status;
-                    if (status === "This Weeks Work" || status === "This Week's Work") {
-                        return true;
+                    if (typeof status === 'string') {
+                        const statusLower = status.toLowerCase();
+                        if (statusLower === "this weeks work" || statusLower === "this week's work") {
+                            return true;
+                        }
                     }
 
                     // 2. Dynamic Fallback: SharePoint often masks custom columns as "field_1", "field_2", etc.
                     // If we didn't find it via a known key, sweep all field values for our target string.
                     for (const key in f) {
-                        if (typeof f[key] === 'string' && (f[key] === "This Weeks Work" || f[key] === "This Week's Work")) {
-                            // We found the status in an opaque field (e.g., field_24).
-                            return true;
+                        if (typeof f[key] === 'string') {
+                            const valLower = f[key].toLowerCase();
+                            if (valLower === "this weeks work" || valLower === "this week's work") {
+                                // We found the status in an opaque field (e.g., field_24).
+                                return true;
+                            }
                         }
                     }
 
