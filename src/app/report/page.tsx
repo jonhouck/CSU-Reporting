@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import dynamic from "next/dynamic"
 import { ShiftReportForm, ShiftFormValues } from "@/components/shift-report-form"
@@ -39,6 +39,10 @@ export default function ReportingPage() {
             })
         }
     }, [session])
+
+    const handleProjectChange = useCallback((projectId: string) => {
+        setShiftDetails(prev => prev ? { ...prev, projectId } : { projectId, shift: "Day Shift", date: new Date() })
+    }, []);
 
     const isLoadingProjects = status === "loading" || (status === "authenticated" && !hasLoadedProjects)
 
@@ -94,9 +98,7 @@ export default function ReportingPage() {
                             projects={mappedProjects}
                             onSubmit={handleShiftSubmit}
                             defaultValues={shiftDetails || undefined}
-                            onProjectChange={(projectId) => {
-                                setShiftDetails(prev => prev ? { ...prev, projectId } : { projectId, shift: "Day Shift", date: new Date() })
-                            }}
+                            onProjectChange={handleProjectChange}
                         />
                     )}
                 </section>

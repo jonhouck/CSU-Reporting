@@ -35,7 +35,7 @@ describe('SharePointService', () => {
     it('should fetch projects successfully', async () => {
         const mockFetchData = [
             { id: '1', fields: { Title: 'Project A', ProjectStatus: 'This Weeks Work' } },
-            { id: '2', fields: { Title: 'Project B', ProjectStatus: 'This Weeks Work' } },
+            { id: '2', fields: { Title: 'Project B', ProjectStatus: 'this weeks work' } },
             { id: '3', fields: { Title: 'Project C', ProjectStatus: 'Completed' } }
         ]
 
