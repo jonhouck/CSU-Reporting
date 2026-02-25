@@ -39,13 +39,26 @@ export class SharePointService {
         }
 
         try {
-            const response = await this.client.api(`/sites/${siteId}/lists/${listId}/items`)
+            let allItems: Project[] = [];
+            let response = await this.client.api(`/sites/${siteId}/lists/${listId}/items`)
                 .header('Prefer', 'HonorNonIndexedQueriesWarningMayFailRandomly')
                 .expand('fields')
                 .top(500) // Fetch a larger batch
                 .get()
 
-            const allItems = response.value as Project[]
+            if (response.value) {
+                allItems = allItems.concat(response.value as Project[]);
+            }
+
+            // Loop through all pages to ensure we don't drop items
+            while (response['@odata.nextLink']) {
+                response = await this.client.api(response['@odata.nextLink'])
+                    .header('Prefer', 'HonorNonIndexedQueriesWarningMayFailRandomly')
+                    .get();
+                if (response.value) {
+                    allItems = allItems.concat(response.value as Project[]);
+                }
+            }
 
             // Filter projects assigned to "This Weeks Work" 
             // Handles missing or modified internal SharePoint field names 
@@ -84,8 +97,8 @@ export class SharePointService {
                 console.log(`[SharePoint Debug] First item full data dump for field identification:`, JSON.stringify(allItems[0].fields, null, 2))
             }
 
-            // TEMP FIX: If the filter stripped everything due to mismatched strings, return ALL items so the UI isn't broken
-            return weeklyProjects.length > 0 ? weeklyProjects : allItems
+            // Return only the firmly filtered projects
+            return weeklyProjects
         } catch (error) {
             console.error("Error fetching projects from SharePoint:", error)
             throw new Error("Failed to fetch projects from SharePoint")
