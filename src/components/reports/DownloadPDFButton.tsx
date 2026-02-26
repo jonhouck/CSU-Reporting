@@ -7,6 +7,7 @@ import ShiftReportPDF from "./ShiftReportPDF"
 
 interface DownloadPDFButtonProps {
     projectTitle: string
+    projectDescription?: string
     date: Date
     shift: string
     bullets: string[]
@@ -25,6 +26,7 @@ interface DownloadPDFButtonProps {
 
 export default function DownloadPDFButton({
     projectTitle,
+    projectDescription,
     date,
     shift,
     bullets,
@@ -42,6 +44,7 @@ export default function DownloadPDFButton({
             const blob = await pdf(
                 <ShiftReportPDF
                     projectTitle={projectTitle}
+                    projectDescription={projectDescription}
                     date={date}
                     shift={shift}
                     bullets={bullets}
