@@ -58,6 +58,21 @@ describe('ShiftReportPDF', () => {
         expect(getByText('Test Photo')).toBeInTheDocument()
     })
 
+    it('renders project description when provided', () => {
+        const props = {
+            projectTitle: 'Test Project',
+            projectDescription: 'This is the project description.',
+            date: new Date('2023-01-01T12:00:00'),
+            shift: 'Day',
+            bullets: [],
+            photos: []
+        }
+
+        const { getByText } = render(<ShiftReportPDF {...props} />)
+        expect(getByText('Project Description')).toBeInTheDocument()
+        expect(getByText('This is the project description.')).toBeInTheDocument()
+    })
+
     it('renders "No work details recorded" when bullets are empty', () => {
         const props = {
             projectTitle: 'Test Project',

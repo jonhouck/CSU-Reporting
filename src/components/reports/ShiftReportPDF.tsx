@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
 
 export interface ShiftReportPDFProps {
     projectTitle: string;
+    projectDescription?: string;
     date: Date;
     shift: string;
     bullets: string[];
@@ -140,6 +141,7 @@ export interface ShiftReportPDFProps {
 
 const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
     projectTitle,
+    projectDescription,
     date,
     shift,
     bullets,
@@ -179,6 +181,16 @@ const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
                     <Text style={styles.metaValue}>{shift}</Text>
                 </View>
             </View>
+
+            {/* Project Description */}
+            {projectDescription && (
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Project Description</Text>
+                    <Text style={{ fontSize: 10, lineHeight: 1.5, color: '#333333' }}>
+                        {projectDescription}
+                    </Text>
+                </View>
+            )}
 
             {/* Work Details */}
             <View style={styles.section}>
