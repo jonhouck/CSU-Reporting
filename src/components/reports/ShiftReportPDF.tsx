@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
     },
     metaGrid: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         marginBottom: 20,
         backgroundColor: '#f5f5f5',
         padding: 10,
@@ -168,17 +168,19 @@ const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
 
             {/* Meta Data */}
             <View style={styles.metaGrid}>
-                <View style={styles.metaItem}>
+                <View style={{ marginBottom: 10 }}>
                     <Text style={styles.metaLabel}>Project</Text>
                     <Text style={styles.metaValue}>{projectTitle}</Text>
                 </View>
-                <View style={styles.metaItem}>
-                    <Text style={styles.metaLabel}>Date</Text>
-                    <Text style={styles.metaValue}>{date ? format(date, 'MMMM do, yyyy') : 'N/A'}</Text>
-                </View>
-                <View style={styles.metaItem}>
-                    <Text style={styles.metaLabel}>Shift</Text>
-                    <Text style={styles.metaValue}>{shift}</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.metaItem}>
+                        <Text style={styles.metaLabel}>Date</Text>
+                        <Text style={styles.metaValue}>{date ? format(date, 'MMMM do, yyyy') : 'N/A'}</Text>
+                    </View>
+                    <View style={styles.metaItem}>
+                        <Text style={styles.metaLabel}>Shift</Text>
+                        <Text style={styles.metaValue}>{shift}</Text>
+                    </View>
                 </View>
             </View>
 
