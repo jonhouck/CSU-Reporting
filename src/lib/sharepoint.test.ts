@@ -34,9 +34,9 @@ describe('SharePointService', () => {
 
     it('should fetch projects successfully', async () => {
         const mockFetchData = [
-            { id: '1', fields: { Title: 'Project A', field_4: 'This Weeks Work' } },
-            { id: '2', fields: { Title: 'Project B', field_4: 'this weeks work' } },
-            { id: '3', fields: { Title: 'Project C', field_4: 'Completed' } }
+            { id: '1', fields: { Title: 'Project A', field_4: 'This Weeks Work', field_17: 'Desc A' } },
+            { id: '2', fields: { Title: 'Project B', field_4: 'this weeks work', field_17: 'Desc B' } },
+            { id: '3', fields: { Title: 'Project C', field_4: 'Completed', field_17: 'Desc C' } }
         ]
 
         // Get the mocked client instance

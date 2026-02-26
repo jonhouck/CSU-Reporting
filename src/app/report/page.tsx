@@ -55,7 +55,7 @@ export default function ReportingPage() {
     }
 
     const selectedProject = projects.find(p => p.id === shiftDetails?.projectId)
-    const projectDescription = selectedProject?.fields?.Description || ""
+    const projectDescription = selectedProject?.fields?.field_17 || selectedProject?.fields?.Description || ""
 
     const mappedProjects = projects.map(p => ({
         id: p.id,
@@ -65,6 +65,7 @@ export default function ReportingPage() {
     // Prepare data for the PDF
     const pdfProps = shiftDetails ? {
         projectTitle: getProjectTitle(shiftDetails.projectId),
+        projectDescription: projectDescription,
         date: shiftDetails.date,
         shift: shiftDetails.shift,
         bullets: bullets,
