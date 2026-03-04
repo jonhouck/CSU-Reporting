@@ -55,7 +55,7 @@ describe('ReportingPage', () => {
         render(<ReportingPage />)
         // Check for specific text that appears in the sub-components
         expect(screen.getByText('Project')).toBeDefined()
-        expect(screen.getByText('Work Details')).toBeDefined()
+        expect(screen.getByText('Work Progress')).toBeDefined()
         expect(screen.getByText('Report Photos')).toBeDefined()
     })
 

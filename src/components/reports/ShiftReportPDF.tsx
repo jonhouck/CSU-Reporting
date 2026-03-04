@@ -196,7 +196,7 @@ const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
 
             {/* Work Details */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Work Details</Text>
+                <Text style={styles.sectionTitle}>Work Progress</Text>
                 <View style={styles.bulletList}>
                     {bullets.map((bullet, index) => (
                         <View key={index} style={styles.bulletItem}>
@@ -206,7 +206,7 @@ const ShiftReportPDF: React.FC<ShiftReportPDFProps> = ({
                     ))}
                     {bullets.length === 0 && (
                         <Text style={{ fontSize: 10, fontStyle: 'italic', color: '#999' }}>
-                            No work details recorded.
+                            No work progress recorded.
                         </Text>
                     )}
                 </View>

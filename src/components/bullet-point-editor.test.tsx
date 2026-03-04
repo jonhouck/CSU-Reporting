@@ -7,7 +7,7 @@ describe("BulletPointEditor", () => {
         const onChange = vi.fn()
         render(<BulletPointEditor bullets={[]} onChange={onChange} />)
 
-        expect(screen.getByText("Work Details")).toBeInTheDocument()
+        expect(screen.getByText("Work Progress")).toBeInTheDocument()
         expect(screen.getByText(/No bullet points added yet/)).toBeInTheDocument()
     })
 
