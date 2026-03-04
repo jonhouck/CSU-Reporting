@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { format } from "date-fns"
@@ -74,13 +74,22 @@ export function ShiftReportForm({ projects, onChange, onProjectChange, defaultVa
         }
     }, [selectedProjectId, onProjectChange])
 
+    const prevValuesRef = useRef<string>("")
+
     useEffect(() => {
         if (formValues.projectId && formValues.date && formValues.shift) {
-            onChange({
+            const newValueObj = {
                 projectId: formValues.projectId,
                 date: formValues.date,
                 shift: formValues.shift as "Day Shift" | "Night Shift"
-            })
+            }
+            const newValueString = JSON.stringify(newValueObj)
+
+            // Only fire onChange if the actual values changed (prevents infinite render loop)
+            if (prevValuesRef.current !== newValueString) {
+                prevValuesRef.current = newValueString
+                onChange(newValueObj)
+            }
         }
     }, [formValues.projectId, formValues.date, formValues.shift, onChange])
 
