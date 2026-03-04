@@ -11,7 +11,7 @@ interface BulletPointEditorProps {
     title?: string
 }
 
-export function BulletPointEditor({ bullets, onChange, title = "Work Details" }: BulletPointEditorProps) {
+export function BulletPointEditor({ bullets, onChange, title = "Work Progress" }: BulletPointEditorProps) {
     const addBullet = () => {
         onChange([...bullets, ""])
     }

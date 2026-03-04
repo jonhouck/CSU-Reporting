@@ -83,7 +83,7 @@ describe('ShiftReportPDF', () => {
         }
 
         const { getByText } = render(<ShiftReportPDF {...props} />)
-        expect(getByText('No work details recorded.')).toBeInTheDocument()
+        expect(getByText('No work progress recorded.')).toBeInTheDocument()
         expect(getByText('No photos attached.')).toBeInTheDocument()
     })
 })

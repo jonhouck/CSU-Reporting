@@ -12,7 +12,8 @@ describe("PhotoUpload", () => {
         render(<PhotoUpload photos={[]} onChange={onChange} />)
 
         expect(screen.getByText("Report Photos")).toBeInTheDocument()
-        expect(screen.getByText("Click or drag photos here")).toBeInTheDocument()
+        expect(screen.getByText("Upload Photos")).toBeInTheDocument()
+        expect(screen.getByText("Take Photo")).toBeInTheDocument()
     })
 
     it("renders existing photos", () => {

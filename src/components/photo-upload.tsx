@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Upload, X } from "lucide-react"
+import { Upload, X, Camera } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -21,6 +21,7 @@ interface PhotoUploadProps {
 export function PhotoUpload({ photos, onChange }: PhotoUploadProps) {
     const [isDragging, setIsDragging] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const cameraInputRef = useRef<HTMLInputElement>(null)
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault()
@@ -75,30 +76,51 @@ export function PhotoUpload({ photos, onChange }: PhotoUploadProps) {
                 <CardTitle className="text-md font-semibold">Report Photos</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`
-            border-2 border-dashed rounded-lg p-8 transition-colors cursor-pointer
-            flex flex-col items-center justify-center gap-2
-            ${isDragging ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50"}
-          `}
-                >
-                    <Upload className="h-8 w-8 text-muted-foreground" />
-                    <div className="text-center">
-                        <p className="text-sm font-medium">Click or drag photos here</p>
-                        <p className="text-xs text-muted-foreground mt-1">PNG, JPG or JPEG</p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <div
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`
+                flex-1 border-2 border-dashed rounded-lg p-6 sm:p-8 transition-colors cursor-pointer
+                flex flex-col items-center justify-center gap-2
+                ${isDragging ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/25"}
+            `}
+                    >
+                        <Upload className="h-8 w-8 text-muted-foreground" />
+                        <div className="text-center">
+                            <p className="text-sm font-medium">Upload Photos</p>
+                            <p className="text-xs text-muted-foreground mt-1">Click or drag files</p>
+                        </div>
+                        <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            className="hidden"
+                            ref={fileInputRef}
+                            onChange={handleFileInput}
+                        />
                     </div>
-                    <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        className="hidden"
-                        ref={fileInputRef}
-                        onChange={handleFileInput}
-                    />
+
+                    <div
+                        onClick={() => cameraInputRef.current?.click()}
+                        className="sm:w-1/3 border-2 border-dashed rounded-lg p-6 sm:p-8 transition-colors cursor-pointer flex flex-col items-center justify-center gap-2 border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/25"
+                    >
+                        <Camera className="h-8 w-8 text-muted-foreground" />
+                        <div className="text-center">
+                            <p className="text-sm font-medium">Take Photo</p>
+                            <p className="text-xs text-muted-foreground mt-1">Use camera</p>
+                        </div>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            className="hidden"
+                            ref={cameraInputRef}
+                            onChange={handleFileInput}
+                        />
+                    </div>
                 </div>
 
                 {photos.length > 0 && (
