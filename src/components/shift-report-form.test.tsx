@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import { describe, it, expect, vi } from "vitest"
 import { ShiftReportForm } from "./shift-report-form"
 
@@ -9,19 +9,17 @@ const mockProjects = [
 
 describe("ShiftReportForm", () => {
     it("renders correctly", () => {
-        const onSubmit = vi.fn()
-        render(<ShiftReportForm projects={mockProjects} onSubmit={onSubmit} />)
+        const onChange = vi.fn()
+        render(<ShiftReportForm projects={mockProjects} onChange={onChange} />)
 
         expect(screen.getByText("Shift Details")).toBeInTheDocument()
     })
 
-    it("submits the form", async () => {
-        const onSubmit = vi.fn()
-        render(<ShiftReportForm projects={mockProjects} onSubmit={onSubmit} />)
+    it("no longer renders a manual save button", async () => {
+        const onChange = vi.fn()
+        render(<ShiftReportForm projects={mockProjects} onChange={onChange} />)
 
-        const submitButton = screen.getByText("Save Shift Details")
-        fireEvent.click(submitButton)
-        // We testing the button click at least
-        expect(submitButton).toBeInTheDocument()
+        const submitButton = screen.queryByText("Save Shift Details")
+        expect(submitButton).not.toBeInTheDocument()
     })
 })

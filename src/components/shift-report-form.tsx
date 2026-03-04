@@ -49,12 +49,12 @@ interface Project {
 
 interface ShiftReportFormProps {
     projects: Project[]
-    onSubmit: (data: ShiftFormValues) => void
+    onChange: (data: ShiftFormValues) => void
     onProjectChange?: (projectId: string) => void
     defaultValues?: Partial<ShiftFormValues>
 }
 
-export function ShiftReportForm({ projects, onSubmit, onProjectChange, defaultValues }: ShiftReportFormProps) {
+export function ShiftReportForm({ projects, onChange, onProjectChange, defaultValues }: ShiftReportFormProps) {
     const form = useForm<ShiftFormValues>({
         resolver: zodResolver(shiftFormSchema),
         defaultValues: {
@@ -65,13 +65,24 @@ export function ShiftReportForm({ projects, onSubmit, onProjectChange, defaultVa
     })
 
     // eslint-disable-next-line react-hooks/incompatible-library
-    const selectedProjectId = form.watch("projectId")
+    const formValues = form.watch()
+    const selectedProjectId = formValues.projectId
 
     useEffect(() => {
         if (onProjectChange && selectedProjectId) {
             onProjectChange(selectedProjectId)
         }
     }, [selectedProjectId, onProjectChange])
+
+    useEffect(() => {
+        if (formValues.projectId && formValues.date && formValues.shift) {
+            onChange({
+                projectId: formValues.projectId,
+                date: formValues.date,
+                shift: formValues.shift as "Day Shift" | "Night Shift"
+            })
+        }
+    }, [formValues.projectId, formValues.date, formValues.shift, onChange])
 
     return (
         <Card className="w-full">
@@ -80,7 +91,7 @@ export function ShiftReportForm({ projects, onSubmit, onProjectChange, defaultVa
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="space-y-6">
                         <FormField
                             control={form.control}
                             name="projectId"
@@ -178,8 +189,7 @@ export function ShiftReportForm({ projects, onSubmit, onProjectChange, defaultVa
                             />
                         </div>
 
-                        <Button type="submit" className="w-full">Save Shift Details</Button>
-                    </form>
+                    </div>
                 </Form>
             </CardContent>
         </Card>
