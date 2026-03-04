@@ -97,7 +97,7 @@ export default function ReportingPage() {
                     ) : (
                         <ShiftReportForm
                             projects={mappedProjects}
-                            onSubmit={handleShiftSubmit}
+                            onChange={handleShiftSubmit}
                             defaultValues={shiftDetails || undefined}
                             onProjectChange={handleProjectChange}
                         />
@@ -143,11 +143,6 @@ export default function ReportingPage() {
                             </Button>
                         )}
                     </div>
-                    {!shiftDetails && (
-                        <p className="text-xs text-center text-muted-foreground">
-                            Please save shift details before generating the report.
-                        </p>
-                    )}
                 </div>
             </div>
         </div>
