@@ -133,23 +133,29 @@ Make sure `.env.local` and `.env` files are in your `.gitignore` file (which the
 
 ## Phase 4: Deployment
 
-Because this is a Next.js (React) application, it needs to be "built" (`npm run build`) before running. The easiest and most reliable way to handle this on Azure App Service is using **GitHub Actions**.
+Because this is a Next.js (React) application, it needs to be "built" (`npm run build`) before running. We have included a pre-configured **GitHub Actions** workflow (`.github/workflows/azure-deploy.yml`) to handle this deployment process automatically when you push or merge code to `main`.
 
-### Deploying via GitHub Actions (Recommended)
-1. Push your latest code changes to your GitHub repository.
-2. Go to your **App Service** in the Azure Portal.
-3. In the left menu, go to **Deployment Center**.
-4. **Settings tab**:
-   - **Source**: Select **GitHub**.
-   - Authenticate with your GitHub account if prompted.
-   - **Organization**, **Repository**, and **Branch**: Select your repo and your main deployment branch.
-5. Click **Save** at the top.
-6. Azure will automatically generate a GitHub Actions workflow YAML file and commit it to your repository in the `.github/workflows/` folder.
-7. This will trigger your very first deployment!
+### 1. Configure the Publish Profile Secret
+Before the workflow can successfully deploy your code to Azure, it needs permission to publish to your specific App Service.
 
-### How to Monitor the Deployment
+1. Go to your **App Service** in the Azure Portal.
+2. At the very top of the Overview blade, click **Download publish profile**.
+3. Open the downloaded file in a text editor and copy all of its XML contents to your clipboard.
+4. Go to your repository on **GitHub**.
+5. Click **Settings** -> **Secrets and variables** -> **Actions** (in the left menu).
+6. Click the green **New repository secret** button.
+7. **Name:** Enter exactly `AZUREAPPSERVICE_PUBLISHPROFILE`
+8. **Secret:** Paste the entire XML content from the publish profile you downloaded.
+9. Click **Add secret**.
+
+### 2. Triggering the Deployment
+
+The deployment workflow is configured to run automatically anytime code is pushed or merged into the `main` branch. 
+
+To monitor a deployment:
 1. Go to your repository on **GitHub** and click the **Actions** tab.
-2. Watch the workflow run consisting of two phases: "build" and "deploy".
+2. Click on the most recent workflow run (e.g., "Build and deploy Node.js app to Azure Web App").
+3. Watch the workflow run consisting of two phases: "build" and "deploy".
 3. Once finished, visit your site at `https://<your-app-service-name>.azurewebsites.net`.
 
 To view application runtime logs (if you get a 500 error):
