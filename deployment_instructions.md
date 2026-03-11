@@ -140,6 +140,7 @@ Before the workflow can successfully deploy your code to Azure, it needs permiss
 
 1. Go to your **App Service** in the Azure Portal.
 2. At the very top of the Overview blade, click **Download publish profile**.
+   - **Note:** If you see an error that "Basic Authentication is disabled", you must temporarily enable it. Go to **Configuration** -> **General settings** -> **Basic Auth Publishing Credentials** and set it to **On**. Save the change, then go back and download the profile.
 3. Open the downloaded file in a text editor and copy all of its XML contents to your clipboard.
 4. Go to your repository on **GitHub**.
 5. Click **Settings** -> **Secrets and variables** -> **Actions** (in the left menu).
