@@ -21,7 +21,8 @@ You need a host for your Next.js application. We will use Azure App Service (Lin
 3. **Basics Tab**:
    - **Subscription**: Select your Dev subscription.
    - **Resource Group**: Select your existing empty resource group.
-   - **Name**: Provide a unique name (e.g., `csudailyreport`). This becomes your URL: `https://<name>.azurewebsites.net`.
+   - **Name**: Provide a unique name (e.g., `csudailyreport`).
+     - *Note: Azure might append a unique random string to this name. Your final URL will be displayed later.*
    - **Publish**: Choose **Code**.
    - **Runtime stack**: Choose **Node 20 LTS** (or the exact Node.js version you are using natively).
    - **Operating System**: Choose **Linux**.
@@ -105,7 +106,8 @@ Now tell your App Service to pull those secrets into the Node.js runtime environ
 - `AUTH_SECRET` = `@Microsoft.KeyVault(VaultName=your-key-vault-name;SecretName=AUTH-SECRET)`
 - `SHAREPOINT_SITE_ID` = `@Microsoft.KeyVault(VaultName=your-key-vault-name;SecretName=SHAREPOINT-SITE-ID)`
 - `SHAREPOINT_LIST_ID` = `@Microsoft.KeyVault(VaultName=your-key-vault-name;SecretName=SHAREPOINT-LIST-ID)`
-- `AUTH_URL` = `https://<your-app-service-name>.azurewebsites.net/api/auth` *(This tells NextAuth/Auth.js where your app is hosted)*
+- `AUTH_URL` = `https://<your-actual-default-domain>/api/auth` 
+  - *(To find your actual domain: Go to your App Service -> Overview -> look for "Default domain" on the right side. It will look like `https://csudailyreport-abcd1234efgh5678.westus-01.azurewebsites.net`)*
 - `AUTH_TRUST_HOST` = `true` *(Necessary for Azure environments)*
 
 Click **Apply** at the bottom to save the configurations. If connected properly, you will see a green checkmark indicating the Key Vault connection was successful.
@@ -121,7 +123,8 @@ To ensure users can log in on the live site, you must whitelist the production A
 2. Select **App registrations** from the left menu and click on your application.
 3. In the left menu, click **Authentication**.
 4. Under **Web -> Redirect URIs**, click **Add URI**.
-5. Add exactly: `https://<your-app-service-name>.azurewebsites.net/api/auth/callback/microsoft-entra-id`
+5. Add exactly: `https://<your-actual-default-domain>/api/auth/callback/microsoft-entra-id` 
+   - *(Again, find this domain on your App Service **Overview** page).*
 6. Click **Save** at the bottom.
 
 ### 2. Local File Changes
@@ -157,7 +160,10 @@ To monitor a deployment:
 1. Go to your repository on **GitHub** and click the **Actions** tab.
 2. Click on the most recent workflow run (e.g., "Build and deploy Node.js app to Azure Web App").
 3. Watch the workflow run consisting of two phases: "build" and "deploy".
-3. Once finished, visit your site at `https://<your-app-service-name>.azurewebsites.net`.
+4. Once finished, you can find the URL to test your app:
+   - Go to your **App Service** in the Azure Portal.
+   - On the **Overview** page, look for the **Default domain** property on the top right. 
+   - Click the link provided (e.g., `https://csudailyreport-xxx.azurewebsites.net`) to open your live application!
 
 To view application runtime logs (if you get a 500 error):
 - Go to your App Service -> **Log stream** to watch the server output live.
