@@ -32,10 +32,12 @@ import {
 } from "@/components/ui/popover"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-const shiftFormSchema = z.object({
+export const shiftFormSchema = z.object({
     projectId: z.string().min(1, "Please select a project."),
     date: z.date({
         message: "A date of shift is required.",
+    }).refine((date) => date <= new Date(), {
+        message: "Date cannot be in the future.",
     }),
     shift: z.enum(["Day Shift", "Night Shift"]),
 })
